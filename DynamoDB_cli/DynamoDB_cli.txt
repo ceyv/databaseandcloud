@@ -1,0 +1,103 @@
+----------------------------------------
+Create table
+----------------------------------------
+
+aws dynamodb create-table --table-name employees --attribute-definitions AttributeName=EmployeeId,AttributeType=N AttributeName=LastName,AttributeType=S --key-schema AttributeName=EmployeeId,KeyType=HASH \
+AttributeName=LastName,KeyType=RANGE --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --tags Key=Project,Value=databaseandcloud
+
+----------------------------------------
+Describe table
+----------------------------------------
+
+aws dynamodb describe-table ---table-name employees 
+
+----------------------------------------
+Insert one item to the table
+----------------------------------------
+
+aws dynamodb put-item --table-name employees \
+     --item '{
+         "EmployeeId": {"N": "176"},
+         "Name": {"S": "Taylor"},
+         "Gender": {"S": "F"}
+      }' \
+   -- return-consumed-capacity TOTAL
+
+
+----------------------------------------
+Insert multiple items to the table
+----------------------------------------
+
+content of file items01.json
+
+{
+    "employees": [
+        {
+            "PutRequest": {
+                "Item": {
+                   "EmployeeId": {"N": "175"},
+                   "LastName": {"S": "Trump"},
+                   "Gender": {"S": "F"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                   "EmployeeId": {"N": "177"},
+                   "LastName": {"S": "Kaufling"},
+                   "Gender": {"S": "M"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                   "EmployeeId": {"N": "178"},
+                   "LastName": {"S": "Raphaely"},
+                   "Age": {"N": "20"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": {
+                   "EmployeeId": {"N": "179"},
+                   "LastName": {"S": "Taylor"},
+                   "Email": {"S": "taylor@acme.com"}
+                }
+            }
+        }
+    ]       
+}
+
+aws dynamodb batch-write-item \
+    --request-items file://items01.json \
+    --return-consumed-capacity TOTAL \
+    --return-item-collection-metrics SIZE
+
+----------------------------------------------------------------------
+Listing all items of the table with LastName=Taylor
+----------------------------------------------------------------------
+
+aws dynamodb scan \
+    --table-name employees \
+    --filter-expression "LastName = :name" \
+    --expression-attribute-values '{":name":{"S":"Taylor"}}'
+
+----------------------------------------------------------------------
+Create a table backup
+----------------------------------------------------------------------
+
+aws dynamodb create-backup \
+    --table-name employees \
+    --backup-name employeesBACKUP
+
+
+----------------------------------------------------------------------
+Delete the table
+----------------------------------------------------------------------
+
+aws dynamodb delete-table --table-name employees
+
+
