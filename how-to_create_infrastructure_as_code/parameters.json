@@ -1,0 +1,22 @@
+[
+	{
+	    "ParameterKey": "DBPassword",
+    	    "ParameterValue": "oracle01"
+	},
+	{
+	    "ParameterKey": "VPCSecurityGroups",
+    	    "ParameterValue": "sg-0d75958bdce09f5f1"
+	},
+	{
+	    "ParameterKey": "DBName",
+    	    "ParameterValue": "db01"
+	},
+	{
+	    "ParameterKey": "DBUser",
+    	    "ParameterValue": "admin"
+	},
+	{
+	    "ParameterKey": "EC2SecurityGroups",
+    	    "ParameterValue": "sg-028246d1ca850114e"
+	}
+]
